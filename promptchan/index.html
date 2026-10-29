@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promptchan AI - Galeria de Mídias Explore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: #12141c;
+      --card-border: #1e2230;
+      --card-hover: #2d3348;
+      --primary: #f43f5e;
+      --primary-hover: #e11d48;
+      --accent: #fb7185;
+      --accent-gradient: linear-gradient(135deg, #f43f5e, #8b5cf6);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: radial-gradient(circle at 50% 0%, #2a1120 0%, #0c0e15 100%);
+      border-bottom: 1px solid var(--card-border);
+      padding: 2.25rem 1.5rem 1.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .header-container {
+      max-width: 1520px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 24px rgba(244, 63, 94, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.35rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: white;
+      box-shadow: 0 4px 18px rgba(244, 63, 94, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(244, 63, 94, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      background: rgba(18, 20, 28, 0.75);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.65rem 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    .stat-item strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Controls bar */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: #151822;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.7rem 1rem 0.7rem 2.5rem;
+      color: white;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      fill: var(--text-muted);
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+      max-width: 100%;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.45rem 0.95rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .pill:hover, .pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* Main Grid */
+    main {
+      max-width: 1520px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      flex: 1;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-hover);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .media-container {
+      position: relative;
+      width: 100%;
+      padding-top: 125%;
+      background: #0d0f15;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .media-container img,
+    .media-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .media-container img {
+      transform: scale(1.05);
+    }
+
+    .badge {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      z-index: 2;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-video {
+      background: rgba(239, 68, 68, 0.85);
+      color: white;
+    }
+
+    .badge-image {
+      background: rgba(59, 130, 246, 0.85);
+      color: white;
+    }
+
+    .card-checkbox {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 3;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .card:hover .card-checkbox, .card-checkbox:checked {
+      opacity: 1;
+    }
+
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex: 1;
+    }
+
+    .card-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: auto;
+      padding-top: 0.25rem;
+    }
+
+    .btn-sm {
+      padding: 0.55rem;
+      font-size: 0.825rem;
+      border-radius: 8px;
+      justify-content: center;
+    }
+
+    /* Modal Fullscreen Preview */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 10, 0.94);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .modal-media {
+      max-width: 85vw;
+      max-height: 75vh;
+      border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+      object-fit: contain;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+      align-items: center;
+      background: rgba(18, 20, 28, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 0.75rem 1.5rem;
+    }
+
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .modal-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .modal-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -3.5rem;
+      right: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .nav-arrow:hover { background: rgba(255, 255, 255, 0.25); }
+    .nav-prev { left: -4.5rem; }
+    .nav-next { right: -4.5rem; }
+
+    /* Selection Floating Bar */
+    .selection-bar {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #181b26;
+      border: 1px solid var(--primary);
+      border-radius: 16px;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      z-index: 50;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .selection-bar.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .header-top { flex-direction: column; align-items: flex-start; }
+      .nav-arrow { display: none; }
+      .modal-close { top: -2.75rem; right: 0; }
+      .modal-footer { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-icon">🔥</div>
+          <div class="brand-text">
+            <h1>Promptchan AI - Galeria de Mídias Explore</h1>
+            <p>Mídias da plataforma extraídas e organizadas por categoria</p>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <a href="promptchan_todas_as_midias.zip" download="promptchan_todas_as_midias.zip" class="btn btn-primary" id="btnDownloadAll">
+            <span>⚡ Baixar Tudo em 1 Clique (.ZIP)</span>
+          </a>
+          <a href="../index.html" class="btn btn-secondary">
+            <span>✨ Ver Galeria CelebMaker AI (416) →</span>
+          </a>
+          <button class="btn btn-secondary" id="btnSelectAll">
+            <span>Selecionar Todos</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-bar" id="statsBar">
+        <div class="stat-item">📁 Total de Mídias: <strong id="totalCount">0</strong></div>
+        <div class="stat-item">🎬 Vídeos: <strong id="videoCount">0</strong></div>
+        <div class="stat-item">🖼️ Imagens: <strong id="imageCount">0</strong></div>
+        <div class="stat-item">📦 Pacote Completo: <strong id="totalSize">~48 MB</strong></div>
+      </div>
+
+      <div class="controls">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.4a8 8 0 10-1.42 1.42l5.4 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z"/></svg>
+          <input type="text" id="searchInput" placeholder="Filtrar por nome, categoria ou formato...">
+        </div>
+
+        <div class="category-pills" id="categoryPills">
+          <button class="pill active" data-category="all">Todos (93)</button>
+          <button class="pill" data-category="Vídeos Explore">Vídeos Explore (12)</button>
+          <button class="pill" data-category="Vídeos Gerados IA">Vídeos Gerados (13)</button>
+          <button class="pill" data-category="Imagens Explore">Imagens Explore (11)</button>
+          <button class="pill" data-category="Perfis de Modelos & IA">Perfis de Modelos (32)</button>
+          <button class="pill" data-category="Gerações & Destaques">Gerações & Destaques (21)</button>
+          <button class="pill" data-category="Estilo Anime">Anime (4)</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </main>
+
+  <!-- Fullscreen Modal Preview -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <button class="nav-arrow nav-prev" id="navPrev">&#10094;</button>
+      <button class="nav-arrow nav-next" id="navNext">&#10095;</button>
+      <div id="modalMediaContainer"></div>
+      <div class="modal-footer">
+        <div class="modal-info">
+          <div class="modal-title" id="modalTitle"></div>
+          <div class="modal-meta" id="modalMeta"></div>
+        </div>
+        <a id="modalDownloadBtn" class="btn btn-primary btn-sm" download>⬇️ Baixar Arquivo Original</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Selection Bar -->
+  <div class="selection-bar" id="selectionBar">
+    <span id="selectionCount">0 arquivos selecionados</span>
+    <button class="btn btn-primary btn-sm" id="btnDownloadSelected">⬇️ Baixar Selecionados (.ZIP)</button>
+    <button class="btn btn-secondary btn-sm" id="btnClearSelection">Cancelar</button>
+  </div>
+
+  <script src="manifest_data.js"></script>
+  <script>
+    let mediaItems = [];
+    let selectedIds = new Set();
+    let currentCategory = 'all';
+    let currentSearch = '';
+    let currentModalIndex = 0;
+
+    // Load data from embedded JS or fallback
+    if (window.EMBEDDED_MANIFEST && Array.isArray(window.EMBEDDED_MANIFEST)) {
+      mediaItems = window.EMBEDDED_MANIFEST;
+      updateStats();
+      renderGallery();
+    } else {
+      fetch('media_manifest.json')
+        .then(res => res.json())
+        .then(data => {
+          mediaItems = data;
+          updateStats();
+          renderGallery();
+        })
+        .catch(err => console.error("Error loading manifest:", err));
+    }
+
+    function updateStats() {
+      document.getElementById('totalCount').innerText = mediaItems.length;
+      const videos = mediaItems.filter(m => m.type === 'video').length;
+      const images = mediaItems.filter(m => m.type === 'image').length;
+      document.getElementById('videoCount').innerText = videos;
+      document.getElementById('imageCount').innerText = images;
+
+      const totalBytes = mediaItems.reduce((acc, m) => acc + (m.size_bytes || 0), 0);
+      document.getElementById('totalSize').innerText = `${(totalBytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+
+      const filtered = mediaItems.filter(item => {
+        const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
+        const matchesSearch = !currentSearch || 
+          item.title.toLowerCase().includes(currentSearch) ||
+          item.filename.toLowerCase().includes(currentSearch) ||
+          item.category.toLowerCase().includes(currentSearch);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #9ca3af;">Nenhuma mídia encontrada com os filtros atuais.</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = item.id;
+
+        const isVideo = item.type === 'video';
+        const badgeClass = isVideo ? 'badge-video' : 'badge-image';
+        const badgeText = isVideo ? 'VÍDEO' : 'IMAGEM';
+
+        card.innerHTML = `
+          <input type="checkbox" class="card-checkbox" data-id="${item.id}" ${selectedIds.has(item.id) ? 'checked' : ''}>
+          <div class="media-container" onclick="openModalById(${item.id})">
+            <span class="badge ${badgeClass}">${badgeText}</span>
+            ${isVideo ? 
+              `<video src="${item.rel_path}" preload="metadata" muted loop playsinline onmouseover="this.play()" onmouseout="this.pause()"></video>` :
+              `<img src="${item.rel_path}" loading="lazy" alt="${item.title}">`
+            }
+          </div>
+          <div class="card-content">
+            <div class="card-title" title="${item.title}">${item.title}</div>
+            <div class="card-meta">
+              <span>${item.category}</span>
+              <span>${item.size_formatted}</span>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-secondary btn-sm" onclick="openModalById(${item.id})">👁️ Ver</button>
+              <a href="${item.rel_path}" download="${item.filename}" class="btn btn-primary btn-sm">⬇️ Baixar</a>
+            </div>
+          </div>
+        `;
+
+        const chk = card.querySelector('.card-checkbox');
+        chk.addEventListener('change', (e) => {
+          e.stopPropagation();
+          toggleSelect(item.id, chk.checked);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    // Category filter pills
+    document.getElementById('categoryPills').addEventListener('click', (e) => {
+      if (e.target.classList.contains('pill')) {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCategory = e.target.dataset.category;
+        renderGallery();
+      }
+    });
+
+    // Search filter
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      currentSearch = e.target.value.trim().toLowerCase();
+      renderGallery();
+    });
+
+    // Selection logic
+    function toggleSelect(id, checked) {
+      if (checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+      updateSelectionBar();
+    }
+
+    function updateSelectionBar() {
+      const bar = document.getElementById('selectionBar');
+      const countEl = document.getElementById('selectionCount');
+      if (selectedIds.size > 0) {
+        bar.classList.add('active');
+        countEl.innerText = `${selectedIds.size} arquivo(s) selecionado(s)`;
+      } else {
+        bar.classList.remove('active');
+      }
+    }
+
+    document.getElementById('btnClearSelection').addEventListener('click', () => {
+      selectedIds.clear();
+      document.querySelectorAll('.card-checkbox').forEach(c => c.checked = false);
+      updateSelectionBar();
+    });
+
+    document.getElementById('btnSelectAll').addEventListener('click', () => {
+      if (selectedIds.size === mediaItems.length) {
+        selectedIds.clear();
+      } else {
+        mediaItems.forEach(m => selectedIds.add(m.id));
+      }
+      renderGallery();
+      updateSelectionBar();
+    });
+
+    // Custom batch zip download
+    document.getElementById('btnDownloadSelected').addEventListener('click', async () => {
+      if (selectedIds.size === 0) return;
+      const btn = document.getElementById('btnDownloadSelected');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⏳ Gerando ZIP...';
+      btn.disabled = true;
+
+      const zip = new JSZip();
+      const itemsToZip = mediaItems.filter(m => selectedIds.has(m.id));
+
+      for (let i = 0; i < itemsToZip.length; i++) {
+        const item = itemsToZip[i];
+        btn.innerHTML = `⏳ Compactando ${i + 1}/${itemsToZip.length}...`;
+        try {
+          const resp = await fetch(item.rel_path);
+          const blob = await resp.blob();
+          zip.file(`${item.folder}/${item.filename}`, blob);
+        } catch (err) {
+          console.error("Falha ao incluir arquivo:", item.filename, err);
+        }
+      }
+
+      btn.innerHTML = '⚡ Compactando...';
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, `promptchan_selecao_${itemsToZip.length}_arquivos.zip`);
+
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    });
+
+    // Modal view
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalMediaContainer = document.getElementById('modalMediaContainer');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalDownloadBtn = document.getElementById('modalDownloadBtn');
+
+    function openModalById(id) {
+      const idx = mediaItems.findIndex(m => m.id === id);
+      if (idx !== -1) {
+        currentModalIndex = idx;
+        renderModalItem();
+        modalOverlay.classList.add('active');
+      }
+    }
+
+    function renderModalItem() {
+      const item = mediaItems[currentModalIndex];
+      modalTitle.innerText = item.title;
+      modalMeta.innerText = `${item.category} • ${item.size_formatted} • Formato: ${item.type.toUpperCase()}`;
+
+      modalDownloadBtn.href = item.rel_path;
+      modalDownloadBtn.download = item.filename;
+
+      if (item.type === 'video') {
+        modalMediaContainer.innerHTML = `
+          <video class="modal-media" src="${item.rel_path}" controls autoplay playsinline></video>
+        `;
+      } else {
+        modalMediaContainer.innerHTML = `
+          <img class="modal-media" src="${item.rel_path}" alt="${item.title}">
+        `;
+      }
+    }
+
+    document.getElementById('modalClose').addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+      modalMediaContainer.innerHTML = '';
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+        modalMediaContainer.innerHTML = '';
+      }
+    });
+
+    document.getElementById('navPrev').addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentModalIndex = (currentModalIndex - 1 + mediaItems.length) % mediaItems.length;
+      renderModalItem();
+    });
+
+    document.getElementById('navNext').addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentModalIndex = (currentModalIndex + 1) % mediaItems.length;
+      renderModalItem();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!modalOverlay.classList.contains('active')) return;
+      if (e.key === 'Escape') {
+        modalOverlay.classList.remove('active');
+        modalMediaContainer.innerHTML = '';
+      } else if (e.key === 'ArrowLeft') {
+        currentModalIndex = (currentModalIndex - 1 + mediaItems.length) % mediaItems.length;
+        renderModalItem();
+      } else if (e.key === 'ArrowRight') {
+        currentModalIndex = (currentModalIndex + 1) % mediaItems.length;
+        renderModalItem();
+      }
+    });
+  </script>
+</body>
+</html>

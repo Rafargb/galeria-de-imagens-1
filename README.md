@@ -1,32 +1,41 @@
-# 🎬 CelebMaker AI - Galeria de Mídias Completa
+# 🖼️ Acervo Completo de Mídias & Galerias (509 Mídias)
 
-Todas as mídias disponíveis na plataforma **CelebMaker AI** (`https://celebmakerai.com/`) extraídas e organizadas em uma galeria visual com opções completas de download.
-
----
-
-## 📊 Estatísticas do Acervo
-
-- **Total de Mídias:** **416 arquivos**
-- **Vídeos & Animações:** **76 vídeos em alta qualidade** (`.mp4`)
-- **Imagens & Fotos:** **340 imagens** (`.webp`, `.png`, `.jpg`)
-- **Tamanho Total Compactado:** **197.49 MB** ([`celebmaker_todas_as_midias.zip`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/celebmaker_todas_as_midias.zip))
-- **Pastas Temáticas:**
-  - 🎬 **Vídeos & Animações** ([`downloaded_media/videos`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/videos))
-  - 💃 **Modelos & Influencers** ([`downloaded_media/modelos`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/modelos))
-  - 🔄 **Face Swap & Demonstrações** ([`downloaded_media/face_swap`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/face_swap))
-  - 🎨 **Edições & Previews** ([`downloaded_media/edicoes`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/edicoes))
-  - 🏷️ **Banners & Destaques** ([`downloaded_media/banners`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/banners))
-  - 🌟 **Logos & Ícones** ([`downloaded_media/logos`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/logos))
-  - 📁 **Galeria Geral** ([`downloaded_media/geral`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media/geral))
+Repositório unificado com todas as mídias extraídas e organizadas em galerias interativas para visualização e download em alta resolução.
 
 ---
 
-## 🚀 Como Visualizar e Usar a Galeria
+## 📂 Estrutura das Plataformas
 
-Abra o arquivo [index.html](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/index.html) no seu navegador ou dê duplo-clique no atalho [abrir_galeria.command](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/abrir_galeria.command).
+### 1. ✨ CelebMaker AI (`/`)
+- **Total de Mídias:** **416 arquivos** (76 vídeos `.mp4` + 340 imagens)
+- **Tamanho Total:** ~197 MB
+- **Galeria:** [`index.html`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/index.html)
+- **Pastas de Mídia:** [`downloaded_media/`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/downloaded_media)
+  - 🎬 `videos/` (76 vídeos)
+  - 💃 `modelos/` (81 fotos)
+  - 🔄 `face_swap/` (35 fotos)
+  - 🎨 `edicoes/` (42 fotos)
+  - 🏷️ `banners/` (4 imagens)
+  - 🌟 `logos/` (3 arquivos)
+  - 📁 `geral/` (175 fotos)
 
-### Recursos de Download:
-1. **⚡ Baixar Tudo em 1 Clique:** Botão no topo da galeria que baixa o arquivo `.ZIP` completo com todas as 416 mídias organizadas em pastas.
-2. **⬇️ Baixar Individualmente:** Botão direto em cada card e no visualizador fullscreen.
-3. **📦 Baixar Seleção:** Marque as caixas dos arquivos desejados e clique em "Baixar Selecionados (.ZIP)".
-4. **👁️ Visualizador Fullscreen:** Player de vídeo integrado e navegação com setas do teclado (`←` e `→`).
+### 2. 🔥 Promptchan AI (`/promptchan/`)
+- **Total de Mídias:** **93 arquivos** (25 vídeos `.mp4` + 68 imagens)
+- **Tamanho Total:** ~48 MB
+- **Galeria:** [`promptchan/index.html`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/promptchan/index.html)
+- **Pastas de Mídia:** [`promptchan/downloaded_media/`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/promptchan/downloaded_media)
+  - 🎬 `videos_explore/` (12 vídeos em destaque)
+  - 🎥 `videos_gerados/` (13 vídeos de demonstração IA)
+  - 🖼️ `imagens_explore/` (11 fotos Explore)
+  - 💃 `perfis_modelos/` (32 fotos de perfis)
+  - ✨ `geracoes_destaques/` (21 criações e vitrine)
+  - 🌸 `anime/` (4 ilustrações anime)
+
+---
+
+## 🚀 Como Visualizar e Usar as Galerias
+
+- **Para abrir CelebMaker AI:** Abra [`index.html`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/index.html) no navegador ou execute [`abrir_galeria.command`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/abrir_galeria.command).
+- **Para abrir Promptchan AI:** Abra [`promptchan/index.html`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/promptchan/index.html) no navegador ou execute [`promptchan/abrir_galeria.command`](file:///Users/apple/.gemini/antigravity/scratch/celebmaker-gallery/promptchan/abrir_galeria.command).
+
+Ambas contam com filtros por categoria, busca em tempo real, download individual com 1 clique e download em pacote `.ZIP`.
